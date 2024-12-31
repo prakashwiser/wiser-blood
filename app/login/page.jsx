@@ -1,17 +1,18 @@
 "use client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import Link from "next/link";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [apiData, setApiData] = useState([]);
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   useEffect(() => {
     axios
