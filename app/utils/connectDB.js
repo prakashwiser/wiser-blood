@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const DATABASE_URL = process.env.DATABASE_URL || ''
+const DATABASE_URL = process.env.MONGODB_URI || ''
 
 if (!DATABASE_URL) {
   throw new Error(
