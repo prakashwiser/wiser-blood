@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     "app/lib/placeholder-data.ts",
     "scripts/seed.js"
-  ],
+, "app/dashboard/blooddonor/page.js", "app/api/signup/editUser[id]/page.jsx", "app/dashboard/bloodissue/page.jsx"  ],
   "exclude": ["node_modules"]
 }

@@ -7,10 +7,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useState } from "react";
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
     num: Yup.string().required("Number is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
@@ -21,18 +25,19 @@ const Signup = () => {
       .required("Confirm Password is required"),
   });
 
-  const handleSubmit = async (values) => {
-    console.log(values);
-    const { email, password, num } = values;
+  const handleSubmit = async (values, { resetForm }) => {
+    const { email, password, num,name } = values;
     try {
       const response = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, num }),
+        body: JSON.stringify({ email, password, num ,name}),
       });
       if (response.status === 201) {
         toast.success("Sign up successful!");
-        router.refresh()
+        setLoading(true);
+        resetForm(); 
+        router.push('/login')
       } else {
         toast.error("Sign up failed. Please try again.");
       }
@@ -53,7 +58,6 @@ const Signup = () => {
       console.error("Error during deletion:", error);
     }
   };
-
   return (
     <>
       <Container>
@@ -66,6 +70,7 @@ const Signup = () => {
                 </div>
                 <Formik
                   initialValues={{
+                    name:"",
                     num: "",
                     email: "",
                     password: "",
@@ -76,10 +81,21 @@ const Signup = () => {
                 >
                   {() => (
                     <Form>
+                         <div className="mb-3">
+                        <Field
+                          type="text"
+                          className="form-control shadow-sm"
+                          id="name"
+                          name="name"
+                          placeholder="Enter Name"
+                        />
+                        <ErrorMessage
+                          name="name"
+                          component="div"
+                          className="text-danger mt-1"
+                        />
+                      </div>
                       <div className="mb-3">
-                        <label htmlFor="num" className="form-label">
-                          Number
-                        </label>
                         <Field
                           type="text"
                           className="form-control shadow-sm"
@@ -93,11 +109,7 @@ const Signup = () => {
                           className="text-danger mt-1"
                         />
                       </div>
-
                       <div className="mb-3">
-                        <label htmlFor="email" className="form-label">
-                          Email
-                        </label>
                         <Field
                           type="email"
                           className="form-control shadow-sm"
@@ -111,11 +123,7 @@ const Signup = () => {
                           className="text-danger mt-1"
                         />
                       </div>
-
                       <div className="mb-3">
-                        <label htmlFor="password" className="form-label">
-                          Password
-                        </label>
                         <Field
                           type="password"
                           className="form-control shadow-sm"
@@ -129,11 +137,7 @@ const Signup = () => {
                           className="text-danger mt-1"
                         />
                       </div>
-
                       <div className="mb-3">
-                        <label htmlFor="repassword" className="form-label">
-                          Confirm Password
-                        </label>
                         <Field
                           type="password"
                           placeholder="Re-Enter Password"
@@ -149,12 +153,21 @@ const Signup = () => {
                       </div>
 
                       <div className="d-grid gap-2 mt-4">
-                        <button
-                          type="submit"
-                          className="btn btn-success fw-bold shadow-sm"
-                        >
-                          Sign Up
-                        </button>
+                        {loading ? (
+                          <button
+                            type="submit"
+                            className="btn btn-success fw-bold shadow-sm"
+                          >
+                            Signing up...
+                          </button>
+                        ) : (
+                          <button
+                            type="submit"
+                            className="btn btn-success fw-bold shadow-sm"
+                          >
+                            Sign Up
+                          </button>
+                        )}
                         <button
                           type="button"
                           onClick={() => deleteData(1)}

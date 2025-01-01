@@ -24,7 +24,6 @@ const Login = () => {
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
   });
 
@@ -33,7 +32,7 @@ const Login = () => {
     const user = apiData.find((item) => item.email === email);
     if (!user) {
       toast.error("Email not found. Please register first.");
-      navigate("/Signup");
+      navigate.push("/signup");
       return;
     }
 
@@ -44,7 +43,7 @@ const Login = () => {
 
     toast.success("Login successful");
     localStorage.setItem("userData", JSON.stringify(user));
-    navigate("/");
+    navigate.push("/dashboard/blooddonor");
   };
 
   return (
@@ -98,12 +97,11 @@ const Login = () => {
                       <button
                         type="submit"
                         className="btn btn-success fw-bold shadow-sm"
-                        disabled={isSubmitting}
                       >
                         Sign in
                       </button>
                       <Link
-                        to="/Signup"
+                        href="/signup"
                         className="btn btn-outline-success fw-bold shadow-sm"
                       >
                         Create Account
@@ -116,7 +114,6 @@ const Login = () => {
           </Card>
         </Col>
       </Row>
-
       <ToastContainer
         position="top-right"
         autoClose={3000}
